@@ -32,3 +32,4 @@ xt/02_perlcritic.t
 xt/03_pod.t
 xt/perlcriticrc
 t/02_fork_method.t
+t/03_toomany_run.t
