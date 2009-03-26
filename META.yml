@@ -17,7 +17,6 @@ no_index:
     - t
 requires:
   Filter::Util::Call: 0
-  IPC::ShareLite: 0.17
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.02
+version: 0.03

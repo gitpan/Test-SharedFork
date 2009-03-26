@@ -3,11 +3,9 @@ use warnings;
 use Test::More tests => 43;
 use Test::SharedFork;
 
-my $pid = fork();
+my $pid = Test::SharedFork->fork();
 if ($pid == 0) {
     # child
-    Test::SharedFork->child;
-
     my $i = 0;
     for (1..20) {
         $i++;
@@ -18,8 +16,6 @@ if ($pid == 0) {
     exit;
 } elsif ($pid) {
     # parent
-    Test::SharedFork->parent;
-
     my $i = 0;
     for (1..20) {
         $i++;

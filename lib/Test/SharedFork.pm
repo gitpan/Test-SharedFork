@@ -1,25 +1,27 @@
 package Test::SharedFork;
 use strict;
 use warnings;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 use Test::Builder;
 use Test::SharedFork::Scalar;
 use Test::SharedFork::Array;
 use Test::SharedFork::Store;
-use IPC::ShareLite ':lock';
 use Storable ();
+use File::Temp ();
+use Fcntl ':flock';
 
 our $TEST;
+my $tmpnam;
 sub import {
-    $TEST = Test::Builder->new();
+    $TEST ||= Test::Builder->new();
 
-    my $store = Test::SharedFork::Store->new();
+    $tmpnam ||= File::Temp::tmpnam();
+
+    my $store = Test::SharedFork::Store->new($tmpnam);
     $store->lock_cb(sub {
-        $store->{share}->store(Storable::nfreeze(+{
-            array => [],
-            scalar => 0,
-        }));
+        $store->initialize();
     }, LOCK_EX);
+    undef $store;
 }
 
 my $CLEANUPME;
@@ -37,7 +39,7 @@ sub child {
 }
 
 sub _setup {
-    my $store = Test::SharedFork::Store->new();
+    my $store = Test::SharedFork::Store->new($tmpnam);
     tie $TEST->{Curr_Test}, 'Test::SharedFork::Scalar', 0, $store;
     tie @{$TEST->{Test_Results}}, 'Test::SharedFork::Array', $store;
 
@@ -49,15 +51,30 @@ sub _setup {
             my @args = @_;
             $store->lock_cb(sub {
                 $cur->(@args);
-            }, LOCK_EX);
+            });
         };
     };
     return $store;
 }
 
+sub fork {
+    my $self = shift;
+
+    my $pid = fork();
+    if ($pid == 0) {
+        child();
+        return $pid;
+    } elsif ($pid > 0) {
+        parent();
+        return $pid;
+    } else {
+        return $pid; # error
+    }
+}
+
 END {
     if ($CLEANUPME) {
-        $CLEANUPME->{share}->destroy(1);
+        unlink $tmpnam;
     }
 }
 
@@ -107,6 +124,11 @@ call this class method, if you are parent
 call this class method, if you are child.
 
 you can call this method many times(maybe the number of your children).
+
+=item fork
+
+This method calls fork(2), and call child() or parent() automatically.
+Return value is pass through from fork(2).
 
 =back
 
