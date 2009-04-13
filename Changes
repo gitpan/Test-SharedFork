@@ -1,5 +1,11 @@
 Revision history for Perl extension Test::SharedFork
 
+0.05
+
+        - fixed bug on Solaris and irix.
+          use seek() instead of sysseek().
+          (kazuho)
+
 0.04
 
         - [BUG] previous version does not works with many fork
