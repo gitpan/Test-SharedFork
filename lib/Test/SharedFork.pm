@@ -1,7 +1,8 @@
 package Test::SharedFork;
 use strict;
 use warnings;
-our $VERSION = '0.05';
+use base 'Test::Builder::Module';
+our $VERSION = '0.06';
 use Test::Builder;
 use Test::SharedFork::Scalar;
 use Test::SharedFork::Array;
@@ -10,13 +11,36 @@ use Storable ();
 use File::Temp ();
 use Fcntl ':flock';
 
-our $TEST;
 my $tmpnam;
 my $STORE;
-our $MODE = 'DEFAULT';
-BEGIN {
-    $TEST ||= Test::Builder->new();
+our $MODE;
 
+my @CLEANUPME;
+sub parent {
+    my $store = _setup();
+    $STORE = $store;
+    push @CLEANUPME, $tmpnam;
+    $MODE = 'PARENT';
+}
+
+sub child {
+    # And musuka said: 'ラピュタは滅びぬ！何度でもよみがえるさ！'
+    # (Quote from 'LAPUTA: Castle in he Sky')
+    __PACKAGE__->builder->no_ending(1);
+
+    $MODE = 'CHILD';
+    $STORE = _setup();
+}
+
+sub _setup {
+    my $store = Test::SharedFork::Store->new($tmpnam);
+    tie __PACKAGE__->builder->{Curr_Test}, 'Test::SharedFork::Scalar', 0, $store;
+    tie @{__PACKAGE__->builder->{Test_Results}}, 'Test::SharedFork::Array', $store;
+
+    return $store;
+}
+
+BEGIN {
     $tmpnam ||= File::Temp::tmpnam();
 
     my $store = Test::SharedFork::Store->new($tmpnam);
@@ -40,32 +64,10 @@ BEGIN {
             }
         };
     };
+
+    parent();
 }
 
-my @CLEANUPME;
-sub parent {
-    my $store = _setup();
-    $STORE = $store;
-    push @CLEANUPME, $tmpnam;
-    $MODE = 'PARENT';
-}
-
-sub child {
-    # And musuka said: 'ラピュタは滅びぬ！何度でもよみがえるさ！'
-    # (Quote from 'LAPUTA: Castle in he Sky')
-    $TEST->no_ending(1);
-
-    $MODE = 'CHILD';
-    $STORE = _setup();
-}
-
-sub _setup {
-    my $store = Test::SharedFork::Store->new($tmpnam);
-    tie $TEST->{Curr_Test}, 'Test::SharedFork::Scalar', 0, $store;
-    tie @{$TEST->{Test_Results}}, 'Test::SharedFork::Array', $store;
-
-    return $store;
-}
 
 sub fork {
     my $self = shift;

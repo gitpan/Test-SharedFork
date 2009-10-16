@@ -27,9 +27,10 @@ META.yml
 README
 t/00_compile.t
 t/01_simple.t
+t/02_fork_method.t
+t/03_toomany_run.t
+t/04_test_before_fork.t
 xt/01_podspell.t
 xt/02_perlcritic.t
 xt/03_pod.t
 xt/perlcriticrc
-t/02_fork_method.t
-t/03_toomany_run.t
