@@ -10,7 +10,7 @@ for (1..10) {
         ok 1, "child $_";
 
         exit;
-    } elsif ($pid > 0) {
+    } elsif (defined($pid)) {
         # parent
         ok 1, "parent $_";
 
@@ -18,7 +18,7 @@ for (1..10) {
 
         ok 1, 'wait ok';
     } else {
-        die $!;
+        die "fork failed: $!";
     }
 }
 
