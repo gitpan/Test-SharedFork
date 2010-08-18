@@ -8,8 +8,10 @@ inc/Module/Install/Fetch.pm
 inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
+inc/Module/Install/ReadmeMarkdownFromPod.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
+inc/Pod/Markdown.pm
 lib/Test/SharedFork.pm
 lib/Test/SharedFork/Array.pm
 lib/Test/SharedFork/Scalar.pm
@@ -26,6 +28,7 @@ t/03_toomany_run.t
 t/04_test_before_fork.t
 t/05_nest.t
 t/06_fail_lineno.t
+t/07_lazy_load.t
 t/store/00_simple.t
 t/store/01_tie_scalar.t
 t/store/02_tie_array.t
