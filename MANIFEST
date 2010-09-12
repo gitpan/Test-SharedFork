@@ -29,7 +29,8 @@ t/04_test_before_fork.t
 t/05_nest.t
 t/06_fail_lineno.t
 t/07_lazy_load.t
-t/08_very_simple.t
+t/08_threads.t
+t/09_very_simple.t
 t/store/00_simple.t
 t/store/01_tie_scalar.t
 t/store/02_tie_array.t
