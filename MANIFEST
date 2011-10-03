@@ -1,5 +1,6 @@
 .gitignore
 Changes
+inc/App/Prove.pm
 inc/Module/Install.pm
 inc/Module/Install/AuthorTests.pm
 inc/Module/Install/Base.pm
@@ -12,6 +13,7 @@ inc/Module/Install/ReadmeMarkdownFromPod.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 inc/Pod/Markdown.pm
+inc/Test/Requires.pm
 lib/Test/SharedFork.pm
 lib/Test/SharedFork/Array.pm
 lib/Test/SharedFork/Scalar.pm
@@ -31,6 +33,9 @@ t/06_fail_lineno.t
 t/07_lazy_load.t
 t/08_threads.t
 t/09_very_simple.t
+t/10_subtest.t
+t/11_failure_location.t
+t/nest/subtest.ttt
 t/store/00_simple.t
 t/store/01_tie_scalar.t
 t/store/02_tie_array.t
