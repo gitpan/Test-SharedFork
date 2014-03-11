@@ -2,7 +2,7 @@ package Test::SharedFork;
 use strict;
 use warnings;
 use base 'Test::Builder::Module';
-our $VERSION = '0.21';
+our $VERSION = '0.22';
 use Test::Builder 0.32; # 0.32 or later is needed
 use Test::SharedFork::Scalar;
 use Test::SharedFork::Array;
@@ -43,85 +43,51 @@ use 5.008000;
 
 my $STORE;
 
-BEGIN {
-    my $builder = __PACKAGE__->builder;
+sub _mangle_builder {
+    my $builder = shift;
 
     if( $] >= 5.008001 && $Config{useithreads} && $INC{'threads.pm'} ) {
         die "# Current version of Test::SharedFork does not supports ithreads.";
     }
 
-    if (Test::Builder->VERSION > 1.005) {
-        # TODO: hook TB2::threads::shared::off instead of following hacks.
-        # new Test::Builder
-        $STORE = Test::SharedFork::Store->new();
-        require TB2::History;
-
-        # wrap the moriginal methods
-        our $level = 0;
-        for my $class (qw/TB2::History TB2::Counter/) {
-            my $meta = $class->meta;
-            my @methods = $meta->get_method_list;
-            for my $method (@methods) {
-                next if $method =~ /^_/;
-                next if $method eq 'meta';
-                next if $method eq 'create';
-                next if $method eq 'singleton';
-                next if $method eq 'buildstack';
-                $meta->add_around_method_modifier(
-                    $method => sub {
-                        my ($code, $orig_self, @args) = @_;
-                        return $orig_self->$code(@args) if (! ref $orig_self) || ! $orig_self->{test_sharedfork_hacked};
-
-                        my $lock = $STORE->get_lock();
-                        local $level = $level + 1;
-                        my $self =
-                          $level == 1 ? $STORE->get($class) : $orig_self;
-
-                        my $ret = Test::SharedFork::Contextual::call(sub { $self->$code(@args) });
-                        $STORE->set($class => $self);
-                        return $ret->result;
-                    },
-                );
-            }
-        }
-        for my $obj ( $builder->counter ) {
-            my $klass = ref($obj);
-            unless ($klass) {
-                require Data::Dumper;
-                die "Cannot fetch object: " . Data::Dumper::Dumper($builder);
-            }
-            $obj->{test_sharedfork_hacked}++;
-            $STORE->set( $klass => $obj );
-        }
+    if ($builder->can("coordinate_forks")) {
+        # Use Test::Builder's implementation.
+        $builder->new->coordinate_forks(1);
     } else {
         # older Test::Builder
         $STORE = Test::SharedFork::Store->new(
             cb => sub {
                 my $store = shift;
                 tie $builder->{Curr_Test}, 'Test::SharedFork::Scalar',
-                $store, 'Curr_Test';
+                    $store, 'Curr_Test';
+                tie $builder->{Is_Passing}, 'Test::SharedFork::Scalar',
+                    $store, 'Is_Passing';
                 tie @{ $builder->{Test_Results} },
-                'Test::SharedFork::Array', $store, 'Test_Results';
+                    'Test::SharedFork::Array', $store, 'Test_Results';
             },
             init => +{
                 Test_Results => $builder->{Test_Results},
                 Curr_Test    => $builder->{Curr_Test},
             },
         );
-    }
 
-    # make methods atomic.
-    no strict 'refs';
-    no warnings 'redefine';
-    for my $name (qw/ok skip todo_skip current_test/) {
-        my $orig = *{"Test::Builder::${name}"}{CODE};
-        *{"Test::Builder::${name}"} = sub {
-            local $Test::Builder::Level = $Test::Builder::Level + 1;
-            my $lock = $STORE->get_lock(); # RAII
-            $orig->(@_);
+        # make methods atomic.
+        no strict 'refs';
+        no warnings 'redefine';
+        for my $name (qw/ok skip todo_skip current_test is_passing/) {
+            my $orig = *{"Test::Builder::${name}"}{CODE};
+            *{"Test::Builder::${name}"} = sub {
+                local $Test::Builder::Level = $Test::Builder::Level + 1;
+                my $lock = $STORE->get_lock(); # RAII
+                $orig->(@_);
+            };
         };
-    };
+    }
+}
 
+BEGIN {
+    my $builder = __PACKAGE__->builder;
+    _mangle_builder($builder);
 }
 
 {
@@ -133,6 +99,8 @@ BEGIN {
 
 1;
 __END__
+
+=for stopwords slkjfd yappo konbuizm
 
 =head1 NAME
 
@@ -181,7 +149,7 @@ konbuizm
 
 =head1 SEE ALSO
 
-L<Test::TCP>, L<Test::Fork>, L<Test::MultipleFork>
+L<Test::TCP>, L<Test::Fork>, L<Test::MultiFork>
 
 =head1 LICENSE
 

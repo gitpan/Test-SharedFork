@@ -4,14 +4,15 @@ author:
   - 'Tokuhiro Matsuno <tokuhirom  slkjfd gmail.com>'
 build_requires:
   App::Prove: 0
-  ExtUtils::MakeMaker: 6.59
+  Test::Builder::Tester: 0
   Test::Requires: 0
   Time::HiRes: 0
 configure_requires:
-  ExtUtils::MakeMaker: 6.59
-distribution_type: module
-dynamic_config: 1
-generated_by: 'Module::Install version 1.06'
+  CPAN::Meta: 0
+  CPAN::Meta::Prereqs: 0
+  Module::Build: 0.38
+dynamic_config: 0
+generated_by: 'Minilla/v0.11.1, CPAN::Meta::Converter version 2.133380'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -19,12 +20,40 @@ meta-spec:
 name: Test-SharedFork
 no_index:
   directory:
-    - inc
     - t
     - xt
+    - inc
+    - share
+    - eg
+    - examples
+    - author
+    - builder
+provides:
+  Test::SharedFork:
+    file: lib/Test/SharedFork.pm
+    version: 0.22
+  Test::SharedFork::Array:
+    file: lib/Test/SharedFork/Array.pm
+  Test::SharedFork::Scalar:
+    file: lib/Test/SharedFork/Scalar.pm
+  Test::SharedFork::Store:
+    file: lib/Test/SharedFork/Store.pm
 requires:
+  File::Temp: 0
+  Test::Builder: 0.32
+  Test::Builder::Module: 0
   Test::More: 0.88
-  perl: 5.8.0
+  perl: 5.008_001
 resources:
-  license: http://dev.perl.org/licenses/
-version: 0.21
+  bugtracker: https://github.com/tokuhirom/Test-SharedFork/issues
+  homepage: https://github.com/tokuhirom/Test-SharedFork
+  repository: git://github.com/tokuhirom/Test-SharedFork.git
+version: 0.22
+x_contributors:
+  - 'lestrrat <lestrrat+github@gmail.com>'
+  - 'Rob Hoelz <rob@hoelz.ro>'
+  - 'Vyacheslav Matyukhin <me@berekuk.ru>'
+  - 'Michael G. Schwern <schwern@pobox.com>'
+  - 'Perlover <perlover@perlover.com>'
+  - 'Neil Bowers <neil@bowers.com>'
+  - 'Tokuhiro Matsuno <tokuhirom@gmail.com>'
