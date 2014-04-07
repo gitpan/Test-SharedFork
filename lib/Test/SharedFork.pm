@@ -2,7 +2,7 @@ package Test::SharedFork;
 use strict;
 use warnings;
 use base 'Test::Builder::Module';
-our $VERSION = '0.23';
+our $VERSION = '0.24';
 use Test::Builder 0.32; # 0.32 or later is needed
 use Test::SharedFork::Scalar;
 use Test::SharedFork::Array;
@@ -68,6 +68,7 @@ sub _mangle_builder {
             init => +{
                 Test_Results => $builder->{Test_Results},
                 Curr_Test    => $builder->{Curr_Test},
+                Is_Passing   => 1,
             },
         );
 
