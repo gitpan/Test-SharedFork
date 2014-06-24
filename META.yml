@@ -8,11 +8,9 @@ build_requires:
   Test::Requires: '0'
   Time::HiRes: '0'
 configure_requires:
-  CPAN::Meta: '0'
-  CPAN::Meta::Prereqs: '0'
-  Module::Build: '0.38'
+  ExtUtils::MakeMaker: '6.64'
 dynamic_config: 0
-generated_by: 'Minilla/v0.13.0, CPAN::Meta::Converter version 2.140640'
+generated_by: 'Minilla/v2.0.0, CPAN::Meta::Converter version 2.141520'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -31,7 +29,7 @@ no_index:
 provides:
   Test::SharedFork:
     file: lib/Test/SharedFork.pm
-    version: '0.24'
+    version: '0.25'
   Test::SharedFork::Array:
     file: lib/Test/SharedFork/Array.pm
   Test::SharedFork::Scalar:
@@ -48,7 +46,7 @@ resources:
   bugtracker: https://github.com/tokuhirom/Test-SharedFork/issues
   homepage: https://github.com/tokuhirom/Test-SharedFork
   repository: git://github.com/tokuhirom/Test-SharedFork.git
-version: '0.24'
+version: '0.25'
 x_contributors:
   - 'lestrrat <lestrrat+github@gmail.com>'
   - 'Vyacheslav Matyukhin <me@berekuk.ru>'
