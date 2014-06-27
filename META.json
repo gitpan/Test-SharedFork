@@ -4,7 +4,7 @@
       "Tokuhiro Matsuno <tokuhirom  slkjfd gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v2.0.0",
+   "generated_by" : "Minilla/v2.1.0",
    "license" : [
       "perl_5"
    ],
@@ -61,7 +61,7 @@
    "provides" : {
       "Test::SharedFork" : {
          "file" : "lib/Test/SharedFork.pm",
-         "version" : "0.25"
+         "version" : "0.26"
       },
       "Test::SharedFork::Array" : {
          "file" : "lib/Test/SharedFork/Array.pm"
@@ -84,7 +84,7 @@
          "web" : "https://github.com/tokuhirom/Test-SharedFork"
       }
    },
-   "version" : "0.25",
+   "version" : "0.26",
    "x_contributors" : [
       "lestrrat <lestrrat+github@gmail.com>",
       "Vyacheslav Matyukhin <me@berekuk.ru>",
@@ -93,6 +93,7 @@
       "Neil Bowers <neil@bowers.com>",
       "Rob Hoelz <rob@hoelz.ro>",
       "rwhitworth <me@ryanwhitworth.com>",
+      "Chad Granum <chad.granum@dreamhost.com>",
       "Tokuhiro Matsuno <tokuhirom@gmail.com>"
    ]
 }
