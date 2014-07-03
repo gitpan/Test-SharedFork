@@ -2,7 +2,7 @@ package Test::SharedFork;
 use strict;
 use warnings;
 use base 'Test::Builder::Module';
-our $VERSION = '0.26';
+our $VERSION = '0.27';
 use Test::Builder 0.32; # 0.32 or later is needed
 use Test::SharedFork::Scalar;
 use Test::SharedFork::Array;
@@ -126,6 +126,7 @@ sub _mangle_builder {
             my $orig = *{"Test::Builder::${name}"}{CODE};
             *{"Test::Builder::${name}"} = sub {
                 local $Test::Builder::Level = $Test::Builder::Level + 1;
+                local $Test::Builder::BLevel = $Test::Builder::BLevel + 1;
                 my $lock = $STORE->get_lock(); # RAII
                 $orig->(@_);
             };
