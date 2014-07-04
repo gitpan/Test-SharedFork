@@ -29,7 +29,7 @@ no_index:
 provides:
   Test::SharedFork:
     file: lib/Test/SharedFork.pm
-    version: '0.27'
+    version: '0.28'
   Test::SharedFork::Array:
     file: lib/Test/SharedFork/Array.pm
   Test::SharedFork::Scalar:
@@ -46,7 +46,7 @@ resources:
   bugtracker: https://github.com/tokuhirom/Test-SharedFork/issues
   homepage: https://github.com/tokuhirom/Test-SharedFork
   repository: git://github.com/tokuhirom/Test-SharedFork.git
-version: '0.27'
+version: '0.28'
 x_contributors:
   - 'lestrrat <lestrrat+github@gmail.com>'
   - 'Vyacheslav Matyukhin <me@berekuk.ru>'
@@ -56,4 +56,5 @@ x_contributors:
   - 'Rob Hoelz <rob@hoelz.ro>'
   - 'rwhitworth <me@ryanwhitworth.com>'
   - 'Chad Granum <chad.granum@dreamhost.com>'
+  - 'Kenichi Ishigaki <ishigaki@cpan.org>'
   - 'Tokuhiro Matsuno <tokuhirom@gmail.com>'
